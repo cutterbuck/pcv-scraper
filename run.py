@@ -3,9 +3,10 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
+import csv, os
 
 
-def scrape_website():
+def run_scraper():
     url = 'PCV_SEARCH_URL'
     try:
         response = requests.get(url)
@@ -29,26 +30,32 @@ def extract_data(soup):
             below_mkt_apts.append(apt)
     return below_mkt_apts
 
+def update_csv_file(below_mkt_apts):
+    with open(os.getcwd()+'/cheap_listings.csv', 'a', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=new_row_dict.keys())
+        for apt in below_mkt_apts:
+            new_row = dict(date, rent, finish, address, floor)
+            writer.writerow(new_row)
+
 def process_data(below_mkt_apts):
-    # write to csv file here
-    import pdb; pdb.set_trace()
     if bool(below_mkt_apts):
-        # with open("scraped_data.csv", "a") as file:
-            # file.write()
+        update_csv_file(below_mkt_apts)
         send_alert()
 
 def send_alert():
-    # send alert to my cell phone here
-    print("Text alert to cell phone")
-    # import pdb; pdb.set_trace()
+    print("New below market 2bed2bath listings")
 
-def run_scraper():
-    scrape_website()
+def manage_scheduler(sched):
+    today = datetime.today().date()
+    start_time = datetime(today.year, today.month, today.day, 4, 0, 0)
+    end_time = datetime(today.year, today.month, today.day, 7, 0, 0)
+    sched.add_job(run_scraper, 'interval', minutes=15, start_date=start_time, end_date=end_time)
 
 def run_scheduler():
-    today = datetime.today().date()
-    sched.add_job(run_scraper, 'interval', minutes=15, start_date=today.first_update_time(), end_date=today.crunch_time_update_start())
+    sched = BackgroundScheduler(daemon=True)
+    manage_jobs_trigger = CronTrigger(day_of_week='*', hour="3", minute="59", second="50")
+    import pdb; pdb.set_trace()
+    sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
 
 if __name__ == "__main__":
-    while True:
-        run_scheduler()
+    run_scheduler()
