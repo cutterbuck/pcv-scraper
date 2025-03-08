@@ -13,7 +13,7 @@ def scrape_website():
         soup = BeautifulSoup(response.content, "html.parser")
         data = extract_data(soup)
         print(f"Scraped data at {datetime.now()}: {data}")
-        proces_data(data)
+        process_data(data)
     except requests.exceptions.RequestException as e:
         print(f"Error during request: {e}")
     except Exception as e:
@@ -22,16 +22,25 @@ def scrape_website():
 def extract_data(soup):
     # implement data extraction from soup logic here
     import pdb; pdb.set_trace()
+    all_apts = soup.final_all('a', href=True)
+    below_mkt_apts = []
+    for apt in all_apts:
+        if apt['price'] < 7000:
+            below_mkt_apts.append(apt)
+    return below_mkt_apts
 
-def process_data(data):
+def process_data(below_mkt_apts):
     # write to csv file here
     import pdb; pdb.set_trace()
-    # with open("scraped_data.csv", "a") as file:
-        # file.write()
+    if bool(below_mkt_apts):
+        # with open("scraped_data.csv", "a") as file:
+            # file.write()
+        send_alert()
 
 def send_alert():
     # send alert to my cell phone here
-    import pdb; pdb.set_trace()
+    print("Text alert to cell phone")
+    # import pdb; pdb.set_trace()
 
 def run_scraper():
     scrape_website()
