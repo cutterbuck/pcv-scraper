@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -7,22 +8,25 @@ import csv, os, time
 
 
 def run_scraper():
-    url = 'PCV_SEARCH_URL'
+    url = 'https://www.stuytown.com/nyc-apartments-for-rent?Order=low-price&PropertyName=Peter+Cooper+Village&Bedrooms=2&Flex=false&Bathrooms=2'
     try:
-        response = requests.get(url)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.content, "html.parser")
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--headless') # ensure GUI is off
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.get(url)
+        html = driver.page_source
+        soup = BeautifulSoup(html, "lxml")
         data = extract_data(soup)
         print(f"Scraped data at {datetime.now()}: {data}")
-        process_data(data)
+        # process_data(data)
     except requests.exceptions.RequestException as e:
         print(f"Error during request: {e}")
     except Exception as e:
         print(f"An error occurred: {e}")
 
 def extract_data(soup):
-    # implement data extraction from soup logic here
     import pdb; pdb.set_trace()
+    mydivs = soup.find_all('span', {"class": "bK_kq"})
     all_apts = soup.final_all('a', href=True)
     below_mkt_apts = []
     for apt in all_apts:
@@ -53,14 +57,14 @@ def manage_scheduler(sched):
 
 def run_scheduler():
     sched = BackgroundScheduler(daemon=True)
-    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="22", minute="00", second="50")
+    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="3", minute="59", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     sched.start()
 
 
 if __name__ == "__main__":
-    print("Running app")
-    run_scheduler()
+    run_scraper()
 
-    while True:
-        time.sleep(1)
+    # run_scheduler()
+    # while True:
+    #     time.sleep(1)

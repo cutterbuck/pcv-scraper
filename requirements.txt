@@ -1,0 +1,5 @@
+APScheduler==3.11.0
+beautifulsoup4==4.13.3
+bs4==0.0.2
+lxml
+webdriver_manager
