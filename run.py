@@ -16,9 +16,10 @@ def run_scraper():
         driver.get(url)
         html = driver.page_source
         soup = BeautifulSoup(html, "lxml")
+        driver.close()
         data = extract_data(soup)
         print(f"Scraped data at {datetime.now()}: {data}")
-        # process_data(data)
+        process_data(data)
     except requests.exceptions.RequestException as e:
         print(f"Error during request: {e}")
     except Exception as e:
@@ -27,11 +28,8 @@ def run_scraper():
 def extract_data(soup):
     import pdb; pdb.set_trace()
     mydivs = soup.find_all('span', {"class": "bK_kq"})
-    all_apts = soup.final_all('a', href=True)
-    below_mkt_apts = []
-    for apt in all_apts:
-        if apt['price'] < 7000:
-            below_mkt_apts.append(apt)
+    all_apts = [int(apt.text.split(" ")[-1].replace(',', '').replace('$', '')) for apt in mydivs]
+    below_mkt_apts = [apt for apt in all_apts if apt < 7400]
     return below_mkt_apts
 
 def update_csv_file(below_mkt_apts):
