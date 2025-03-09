@@ -26,18 +26,23 @@ def run_scraper():
         print(f"An error occurred: {e}")
 
 def extract_data(soup):
-    import pdb; pdb.set_trace()
-    mydivs = soup.find_all('span', {"class": "bK_kq"})
-    all_apts = [int(apt.text.split(" ")[-1].replace(',', '').replace('$', '')) for apt in mydivs]
-    below_mkt_apts = [apt for apt in all_apts if apt < 7400]
+    mydivs = soup.find_all('div', {"class": "bK_kp"})
+    below_mkt_apts = []
+    for div in mydivs:
+        full_address = div.next.next.next.text.split(', Apt ')
+        building = full_address[0]
+        floor = full_address[-1].split('-')[0]
+        unit = full_address[-1].split('-')[1]
+        rent = int(div.span.text.split(" ")[-1].replace(',', '').replace('$', ''))
+        if rent < 7400:
+            below_mkt_apts.append(dict(posting_date=datetime.now().date().strftime('%-m/%-d/%y'), building=building, floor=floor, unit=unit, rent=rent))
     return below_mkt_apts
 
 def update_csv_file(below_mkt_apts):
     with open(os.getcwd()+'/cheap_listings.csv', 'a', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=new_row_dict.keys())
         for apt in below_mkt_apts:
-            new_row = dict(date, rent, finish, address, floor)
-            writer.writerow(new_row)
+            writer = csv.DictWriter(f, fieldnames=apt.keys(), quoting=csv.QUOTE_NONE)
+            writer.writerow(apt)
 
 def process_data(below_mkt_apts):
     if bool(below_mkt_apts):
