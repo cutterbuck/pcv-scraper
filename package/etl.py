@@ -34,7 +34,7 @@ def etl_data(soup):
         rent = int(div.span.text.split(" ")[-1].replace(',', '').replace('$', ''))
         status = 'available'
         if rent < 7400:
-            existing_listing = Listing.query.filter(Listing.building==building, Listing.floor==floor, Listing.unit==unit, Listing.rent==rent).first()
+            existing_listing = Listing.query.filter(Listing.posting_date==datetime.now().date(), Listing.building==building, Listing.floor==floor, Listing.unit==unit, Listing.rent==rent).first()
             if bool(existing_listing) == False:
                 new_listing = Listing(posting_date=datetime.now().date(), building=building, floor=floor, unit=unit, rent=rent, status=status)
                 db.session.add(new_listing)
@@ -56,6 +56,3 @@ def run_scheduler():
     manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="3", minute="59", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     sched.start()
-
-run_scraper()
-import pdb; pdb.set_trace()
