@@ -1,4 +1,5 @@
 from dash import html
+from package.app import app
 
 
 def generate_layout():
@@ -7,4 +8,4 @@ def generate_layout():
     ])
 
 
-app.layout = generate_app_layout()
+app.layout = generate_layout()
