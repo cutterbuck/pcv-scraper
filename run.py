@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-import csv, os
+import csv, os, time
 
 
 def run_scraper():
@@ -53,9 +53,14 @@ def manage_scheduler(sched):
 
 def run_scheduler():
     sched = BackgroundScheduler(daemon=True)
-    manage_jobs_trigger = CronTrigger(day_of_week='*', hour="3", minute="59", second="50")
-    import pdb; pdb.set_trace()
+    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="22", minute="00", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
+    sched.start()
+
 
 if __name__ == "__main__":
+    print("Running app")
     run_scheduler()
+
+    while True:
+        time.sleep(1)
