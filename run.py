@@ -5,5 +5,4 @@ from package.etl import run_scheduler
 
 if __name__ == '__main__':
     run_scheduler()
-    # run_scraper()
-    app.run_server(debug=True, dev_tools_ui=False, use_reloader=True, port=8060)
+    app.run_server(debug=True, dev_tools_ui=False, use_reloader=False, port=8060)

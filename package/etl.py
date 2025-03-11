@@ -4,6 +4,9 @@ from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from package.models import Listing, db
+from package.app import app
+import os
+from twilio.rest import Client
 
 
 def run_scraper():
@@ -34,16 +37,27 @@ def etl_data(soup):
         rent = int(div.span.text.split(" ")[-1].replace(',', '').replace('$', ''))
         status = 'available'
         if rent < 7400:
-            existing_listing = Listing.query.filter(Listing.posting_date==datetime.now().date(), Listing.building==building, Listing.floor==floor, Listing.unit==unit, Listing.rent==rent).first()
-            if bool(existing_listing) == False:
-                new_listing = Listing(posting_date=datetime.now().date(), building=building, floor=floor, unit=unit, rent=rent, status=status)
-                db.session.add(new_listing)
-                new_listings.append(new_listing)
-            db.session.commit()
+            with app.server.app_context():
+                existing_listing = Listing.query.filter(Listing.posting_date==datetime.now().date(), Listing.building==building, Listing.floor==floor, Listing.unit==unit, Listing.rent==rent).first()
+                if bool(existing_listing) == False:
+                    new_listing = Listing(posting_date=datetime.now().date(), building=building, floor=floor, unit=unit, rent=rent, status=status)
+                    db.session.add(new_listing)
+                    new_listings.append(new_listing)
+                db.session.commit()
     return new_listings
 
 def send_alert():
-    print("New below market 2bed2bath listings available")
+    account_sid = os.environ.get('twilio_account_sid')
+    auth_token = os.environ.get('twilio_auth_token')
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+        from_=os.environ.get('twilio_from_num'),
+        content_sid=os.environ.get('twilio_content_sid'),
+        content_variables='{"1":"PCV apartment available"}',
+        to=os.environ.get('twilio_my_num')
+    )
+    print(message.sid)
 
 def manage_scheduler(sched):
     today = datetime.today().date()
