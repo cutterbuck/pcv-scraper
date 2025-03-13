@@ -4,13 +4,13 @@ from package.models import Listing, db
 
 
 def generate_layout():
-    listings_query = db.session.query(Listing.posting_date, Listing.building, Listing.floor, Listing.unit, Listing.rent, Listing.status).order_by(Listing.id).all()
-    listings = [{"Posting Date": el[0], "Building": el[1], "Floor": el[2], "Unit": el[3], "Rent": el[4], "Status": el[5]} for el in listings_query]
-    col_names = ["Posting Date", "Building", "Floor", "Unit", "Rent", "Status"]
+    listings_query = db.session.query(Listing.building, Listing.floor, Listing.unit, Listing.status, Listing.current_rent, Listing.rent_change, Listing.initial_rent, Listing.last_updated, Listing.update_time, Listing.initial_posting_date, Listing.days_listed).order_by(Listing.id).all()
+    listings = [{"Building": el[0], "Floor": el[1], "Unit": el[2], "Status": el[3], "Rent": el[4], "Change": el[5], "Initial Rent": el[6], "Last Update": el[7], "Time": el[8], "First Posted": el[9], "Days Available": el[10]} for el in listings_query]
+    col_names = ["Building", "Floor", "Unit", "Status", "Rent", "Change", "Initial Rent", "Last Update", "Time", "First Posted", "Days Available"]
     columns = [{'name': c, 'id': c} for c in col_names]
 
     return html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '8%', 'marginTop': '4%'}, children=[
-            html.H4('Peter Cooper Village Listings:'),
+            html.H4('Peter Cooper Village 2Bed/2Bath Listings:'),
             dash_table.DataTable(
                 data=listings,
                 columns=[{'name': c, 'id': c} for c in col_names],
