@@ -19,7 +19,7 @@ def generate_layout():
                 style_cell={
                     'font-family': "Open Sans, HelveticaNeue, Helvetica Neue, Helvetica, Arial, sans-serif",
                     'text-align': 'center',
-                    'font-size': '9px',
+                    'font-size': '12px',
                     'font-weight': '400',
                     'line-height': '1.6',
                     'padding': '2px 0px 2px 0px',
@@ -39,7 +39,7 @@ def generate_layout():
                     'fontWeight': '600',
                     'height': '27px'
                 },
-                css=[{'selector': '.dash-spreadsheet tr', 'rule': 'height: 20px;'}],
+                css=[{'selector': '.dash-spreadsheet tr', 'rule': 'height: 23px;'}],
             )
     ])
 
