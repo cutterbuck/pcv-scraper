@@ -17,7 +17,6 @@ def run_scraper():
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
         service = Service(ChromeDriverManager().install())
-        print('service', service)
         driver = webdriver.Chrome(service=service, options=options)
         # driver = webdriver.Chrome(options=options)
         driver.get(url)
