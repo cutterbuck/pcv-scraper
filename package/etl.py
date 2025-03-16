@@ -17,7 +17,9 @@ def run_scraper():
         driver = webdriver.Chrome(options=chrome_options)
         driver.get(url)
         html = driver.page_source
+        print('received html')
         soup = BeautifulSoup(html, "lxml")
+        print('ran bs4')
         driver.close()
         data = etl_data(soup)
         print(f"Scraped data at {datetime.now()}: {data}")
@@ -76,14 +78,14 @@ def send_alert(new_listings):
 
 def manage_scheduler(sched):
     today = datetime.today().date()
-    start_time = datetime(today.year, today.month, today.day, 4, 0, 0)
-    end_time = datetime(today.year, today.month, today.day, 7, 0, 0)
+    start_time = datetime(today.year, today.month, today.day, 10, 50, 0)
+    end_time = datetime(today.year, today.month, today.day, 12, 0, 0)
     print("Resetting run_scraper for today")
     sched.add_job(run_scraper, 'interval', minutes=15, start_date=start_time, end_date=end_time)
 
 def run_scheduler():
     sched = BackgroundScheduler(daemon=True)
-    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="3", minute="59", second="50")
+    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="10", minute="49", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
     sched.start()
