@@ -18,10 +18,7 @@ def run_scraper():
         options.add_argument("--headless=new")
         service = Service(ChromeDriverManager().install())
         print('service', service)
-        try:
-            driver = webdriver.Chrome(service=service, options=options)
-        except:
-            import pdb; pdb.set_trace()
+        driver = webdriver.Chrome(service=service, options=options)
         # driver = webdriver.Chrome(options=options)
         driver.get(url)
         html = driver.page_source
