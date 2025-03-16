@@ -84,14 +84,14 @@ run_scraper()
 # GMT == NYC time +4
 def manage_scheduler(sched):
     today = datetime.today().date()
-    start_time = datetime(today.year, today.month, today.day, 19, 51, 0)
-    end_time = datetime(today.year, today.month, today.day, 121, 51, 0)
+    start_time = datetime(today.year, today.month, today.day, 19, 56, 0)
+    end_time = datetime(today.year, today.month, today.day, 21, 51, 0)
     print("Resetting run_scraper for today")
     sched.add_job(run_scraper, 'interval', minutes=15, start_date=start_time, end_date=end_time)
 
 def run_scheduler():
     sched = BackgroundScheduler(daemon=True)
-    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="19", minute="50", second="50")
+    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="19", minute="55", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
     sched.start()
