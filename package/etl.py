@@ -76,16 +76,17 @@ def send_alert(new_listings):
         conn.getresponse()
         print("sent alert!")
 
+# GMT == NYC time +4
 def manage_scheduler(sched):
     today = datetime.today().date()
-    start_time = datetime(today.year, today.month, today.day, 11, 0, 0)
-    end_time = datetime(today.year, today.month, today.day, 12, 30, 0)
+    start_time = datetime(today.year, today.month, today.day, 15, 10, 0)
+    end_time = datetime(today.year, today.month, today.day, 17, 10, 0)
     print("Resetting run_scraper for today")
     sched.add_job(run_scraper, 'interval', minutes=15, start_date=start_time, end_date=end_time)
 
 def run_scheduler():
     sched = BackgroundScheduler(daemon=True)
-    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="10", minute="59", second="50")
+    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="15", minute="09", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
     sched.start()
