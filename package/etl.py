@@ -14,17 +14,18 @@ import os
 def run_scraper():
     url = 'https://www.stuytown.com/nyc-apartments-for-rent?Order=low-price&PropertyName=Peter+Cooper+Village&Bedrooms=2&Flex=false&Bathrooms=2'
     try:
-        s=Service(ChromeDriverManager().install())
         options = webdriver.ChromeOptions()
         options.add_argument('--headless') # ensure GUI is off
         options.add_argument("--no-sandbox")
+        options.add_argument('--disable-dev-shm-usage')
         options.headless = True
+        s = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=s, options=options)
         driver.get(url)
         html = driver.page_source
         print('received html')
         soup = BeautifulSoup(html, "lxml")
-        driver.close()
+        driver.quit()
         data = etl_data(soup)
         print(f"Scraped data at {datetime.now()}: {data}")
         send_alert(data)
@@ -35,7 +36,6 @@ def etl_data(soup):
     mydivs = soup.find_all('div', {"class": "bK_kp"})
     scraped_listings = []
     now = datetime.now()
-
     with app.server.app_context():
         for div in mydivs:
             full_address = div.next.next.next.text.split(', Apt ')
@@ -84,14 +84,14 @@ run_scraper()
 # GMT == NYC time +4
 def manage_scheduler(sched):
     today = datetime.today().date()
-    start_time = datetime(today.year, today.month, today.day, 18, 25, 0)
-    end_time = datetime(today.year, today.month, today.day, 19, 10, 0)
+    start_time = datetime(today.year, today.month, today.day, 19, 51, 0)
+    end_time = datetime(today.year, today.month, today.day, 121, 51, 0)
     print("Resetting run_scraper for today")
     sched.add_job(run_scraper, 'interval', minutes=15, start_date=start_time, end_date=end_time)
 
 def run_scheduler():
     sched = BackgroundScheduler(daemon=True)
-    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="18", minute="20", second="50")
+    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="19", minute="50", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
     sched.start()
