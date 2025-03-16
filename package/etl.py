@@ -15,12 +15,17 @@ def run_scraper():
     url = 'https://www.stuytown.com/nyc-apartments-for-rent?Order=low-price&PropertyName=Peter+Cooper+Village&Bedrooms=2&Flex=false&Bathrooms=2'
     try:
         options = webdriver.ChromeOptions()
-        options.add_argument('--headless') # ensure GUI is off
-        options.add_argument("--no-sandbox")
+        options.add_argument('--no-sandbox')
+        options.add_argument('--headless')
         options.add_argument('--disable-dev-shm-usage')
-        options.headless = True
-        s = Service(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=s, options=options)
+        options.add_argument("start-maximized");
+        options.add_argument("disable-infobars");
+        options.add_argument("--disable-extensions");
+        options.add_argument("--disable-gpu");
+        options.add_argument("--disable-dev-shm-usage");
+        # s = Service(ChromeDriverManager().install())
+        # driver = webdriver.Chrome(service=s, options=options)
+        driver = webdriver.Chrome(options=options)
         driver.get(url)
         html = driver.page_source
         print('received html')
