@@ -18,7 +18,6 @@ def run_scraper():
         options.add_argument("--headless=new")
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
-        # driver = webdriver.Chrome(options=options)
         driver.get(url)
         html = driver.page_source
         print('received html')
@@ -43,13 +42,13 @@ def etl_data(soup):
             rent = int(div.span.text.split(" ")[-1].replace(',', '').replace('$', ''))
             existing_listing = Listing.query.filter(Listing.building==building, Listing.floor==floor, Listing.unit==unit, Listing.status=='available').first()
             if bool(existing_listing):
-                if existing_listing.last_updated != now.date():
+                if rent != existing_listing.current_rent:
                     existing_listing.last_updated=now.date()
                     existing_listing.update_time=now.strftime('%-I:%M:%S%p')
                     existing_listing.current_rent=rent
                     existing_listing.rent_change=rent - existing_listing.initial_rent
-                    existing_listing.days_listed=(now.date() - existing_listing.initial_posting_date).days + 1
-                    db.session.add(existing_listing)
+                existing_listing.days_listed=(now.date() - existing_listing.initial_posting_date).days + 1
+                db.session.add(existing_listing)
                 scraped_listings.append(existing_listing)
             else:
                 new_listing = Listing(initial_posting_date=now.date(), last_updated=now.date(), update_time=now.strftime('%-I:%M:%S%p'), building=building, floor=floor, unit=unit, initial_rent=rent, rent_change=0, current_rent=rent, days_listed=1, status='available')
@@ -66,7 +65,7 @@ def etl_data(soup):
     return scraped_listings
 
 def send_alert(new_listings):
-    cheap_filter = [el for el in new_listings if el.current_rent < 7500]
+    cheap_filter = [el for el in new_listings if el.current_rent < 7000]
     if bool(cheap_filter):
         conn = http.client.HTTPSConnection("api.pushover.net:443")
         conn.request("POST", "/1/messages.json",
@@ -78,7 +77,7 @@ def send_alert(new_listings):
         conn.getresponse()
         print("sent alert!")
 
-
+# run_scraper()
 # GMT == NYC time +4
 def manage_scheduler(sched):
     today = datetime.today().date()
