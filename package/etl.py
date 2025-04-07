@@ -61,7 +61,7 @@ def etl_data(soup):
             if listing not in scraped_listings:
                 listing.status = 'unavailable'
                 db.session.add(listing)
-
+        db.session.commit()
     return scraped_listings
 
 def send_alert(new_listings):
