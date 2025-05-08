@@ -28,13 +28,13 @@ def scrape_stuytown():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    try:
-        driver = webdriver.Chrome(service=Service(), options=options)
-    except:
-        import pdb; pdb.set_trace()
-        chromedriver_path = shutil.which("chromedriver") #/usr/bin/chromedriver
-        service = webdriver.ChromeService(executable_path=chromedriver_path)
-        driver = webdriver.Chrome(options=options, service=service)
+    # try:
+    driver = webdriver.Chrome(service=Service(), options=options)
+    # except:
+    # import pdb; pdb.set_trace()
+    # chromedriver_path = shutil.which("chromedriver") #/usr/bin/chromedriver
+    # service = webdriver.ChromeService(executable_path=chromedriver_path)
+    # driver = webdriver.Chrome(options=options, service=service)
 
     driver.get(url)
     html = driver.page_source
@@ -93,7 +93,7 @@ def run_scraper():
     cheap_filter = [el for el in listings if el.current_rent < 7000]
     if bool(cheap_filter): send_alert("Cheap 2PCV bed/2bath availability. Act fast!")
 
-# run_scraper()
+run_scraper()
 # GMT == NYC time +4
 def manage_scheduler(sched):
     today = datetime.today().date()
