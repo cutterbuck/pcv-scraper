@@ -6,8 +6,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from package.models import Listing, db
 from package.app import app
-import http, urllib
-import os
+import http, urllib, os, shutil
+
 
 
 def send_alert(message):
@@ -27,7 +27,15 @@ def scrape_stuytown():
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(service=Service(), options=options)
+
+    try:
+        driver = webdriver.Chrome(service=Service(), options=options)
+    except:
+        import pdb; pdb.set_trace()
+        chromedriver_path = shutil.which("chromedriver") #/usr/bin/chromedriver
+        service = webdriver.ChromeService(executable_path=chromedriver_path)
+        driver = webdriver.Chrome(options=options, service=service)
+
     driver.get(url)
     html = driver.page_source
     print('received html')
@@ -91,8 +99,8 @@ def manage_scheduler(sched):
     today = datetime.today().date()
     # start_time = datetime(today.year, today.month, today.day, 3, 31, 0)
     # end_time = datetime(today.year, today.month, today.day, 6, 31, 0)
-    start_time = datetime(today.year, today.month, today.day, 14, 40, 0)
-    end_time = datetime(today.year, today.month, today.day, 14, 50, 0)
+    start_time = datetime(today.year, today.month, today.day, 15, 45, 0)
+    end_time = datetime(today.year, today.month, today.day, 15, 55, 0)
 
     print("Resetting run_scraper for today")
     # sched.add_job(run_scraper, 'interval', minutes=15, start_date=start_time, end_date=end_time)
@@ -101,7 +109,7 @@ def manage_scheduler(sched):
 def run_scheduler():
     sched = BackgroundScheduler(daemon=True)
     # manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="3", minute="29", second="50")
-    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="14", minute="35", second="0")
+    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="15", minute="40", second="0")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
     sched.start()
