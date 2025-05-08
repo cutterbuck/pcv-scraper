@@ -93,6 +93,7 @@ def run_scraper():
     if bool(cheap_filter): send_alert("Cheap 2PCV bed/2bath availability. Act fast!")
 
 run_scraper()
+
 # GMT == NYC time +4
 def manage_scheduler(sched):
     today = datetime.today().date()
