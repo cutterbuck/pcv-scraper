@@ -1,16 +1,9 @@
-FROM python:3.10.10
-
-WORKDIR /app
-
-COPY . /app
-
-RUN pip install --trusted-host pypi.install.org -r requirements.txt
-
-RUN apt-get update && apt-get install -y wget unzip && \
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt-get install -y ./google-chrome-stable_current_amd64.deb && \
-    rm google-chrome-stable_current_amd64.deb && \
-    sudo apt-get install -y chromium-browser && \
-    apt-get clean
-
-CMD ["python", "argy.py"]
+ARG PORT = 443
+FROM cypress/browser:latest
+RUN apt-get install python 3 -y
+RUN echo $(python3 -m site --user-base)
+COPY requirements.txt .
+ENV PATH /home/root/.local/bin:${PATH}
+RUN apt-get update && apt-get install -y python3-pip && pip install -r requirements.txt
+COPY ..
+CMD uvicorn main:app --host 0.0.0.0 --port $PORT
