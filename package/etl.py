@@ -1,5 +1,4 @@
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -28,7 +27,7 @@ def scrape_stuytown():
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(service=Service(), options=options)
     driver.get(url)
     html = driver.page_source
     print('received html')
@@ -92,8 +91,8 @@ def manage_scheduler(sched):
     today = datetime.today().date()
     # start_time = datetime(today.year, today.month, today.day, 3, 31, 0)
     # end_time = datetime(today.year, today.month, today.day, 6, 31, 0)
-    start_time = datetime(today.year, today.month, today.day, 14, 10, 0)
-    end_time = datetime(today.year, today.month, today.day, 14, 30, 0)
+    start_time = datetime(today.year, today.month, today.day, 14, 40, 0)
+    end_time = datetime(today.year, today.month, today.day, 14, 50, 0)
 
     print("Resetting run_scraper for today")
     # sched.add_job(run_scraper, 'interval', minutes=15, start_date=start_time, end_date=end_time)
@@ -102,7 +101,7 @@ def manage_scheduler(sched):
 def run_scheduler():
     sched = BackgroundScheduler(daemon=True)
     # manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="3", minute="29", second="50")
-    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="14", minute="5", second="0")
+    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="14", minute="35", second="0")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
     sched.start()
