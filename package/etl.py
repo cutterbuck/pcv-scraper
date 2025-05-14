@@ -112,5 +112,5 @@ def run_scheduler():
     # manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="14", minute="29", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
-    run_scraper()
+    # run_scraper()
     sched.start()
