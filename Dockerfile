@@ -1,12 +1,25 @@
-ARG PORT = 443
-FROM cypress/browser:latest
-RUN apt-get install python 3 -y
-RUN echo $(python3 -m site --user-base)
-COPY requirements.txt .
-ENV PATH /home/root/.local/bin:${PATH}
-RUN apt-get update && apt-get install -y python3-pip && pip install -r requirements.txt
-RUN apt install chromium-chromedriver
-RUN apt install chromium-browser
-RUN apt --fix-broken install
-COPY ..
-CMD uvicorn main:app --host 0.0.0.0 --port $PORT
+FROM --platform=linux/amd64 python:3.12
+
+WORKDIR /app
+
+RUN mkdir __logger
+
+# install google chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+RUN apt-get update && apt-get install -y google-chrome-stable
+
+# set display port to avoid crash
+ENV DISPLAY=:99
+
+RUN pip install --upgrade pip
+
+COPY . /app
+
+RUN pip install -r requirements.txt
+
+RUN google-chrome --version
+
+EXPOSE 8080
+
+CMD ["python", "run.py"]
