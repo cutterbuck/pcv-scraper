@@ -33,6 +33,7 @@ def scrape_stuytown():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    print("made it past driver")
     driver.get(url)
     html = driver.page_source
     print('received html')
@@ -111,5 +112,5 @@ def run_scheduler():
     # manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="14", minute="29", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
-    # run_scraper()
+    run_scraper()
     sched.start()
