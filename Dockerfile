@@ -15,9 +15,6 @@ RUN pip install --upgrade pip
 COPY . /app
 
 RUN pip install -r requirements.txt
-
 RUN google-chrome --version
 
-EXPOSE 8050
-
-CMD ["python", "run.py"]
+CMD ["python", "run.py", "--host", "0.0.0.0", "--port", "8080"]
