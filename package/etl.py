@@ -90,7 +90,7 @@ def run_scraper():
     cheap_filter = [el for el in listings if el.current_rent < 7000]
     if bool(cheap_filter): send_alert("Cheap 2PCV bed/2bath availability. Act fast!")
 
-# run_scraper()
+run_scraper()
 # GMT == NYC time +4
 def manage_scheduler(sched):
     today = datetime.today().date()
