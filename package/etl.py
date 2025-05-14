@@ -23,20 +23,21 @@ def send_alert(message):
     print("sent alert!")
 
 def scrape_stuytown():
-    url = 'https://www.stuytown.com/nyc-apartments-for-rent?Order=low-price&PropertyName=Peter+Cooper+Village&Bedrooms=2&Flex=false&Bathrooms=2'
-
-    # CHROME
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver.get(url)
-    html = driver.page_source
-    print('received html')
-    soup = BeautifulSoup(html, "lxml")
-    driver.quit()
-    return soup
+    print("hello world!!!")
+    # url = 'https://www.stuytown.com/nyc-apartments-for-rent?Order=low-price&PropertyName=Peter+Cooper+Village&Bedrooms=2&Flex=false&Bathrooms=2'
+    #
+    # # CHROME
+    # options = webdriver.ChromeOptions()
+    # options.add_argument("--headless")
+    # options.add_argument("--no-sandbox")
+    # options.add_argument("--disable-dev-shm-usage")
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # driver.get(url)
+    # html = driver.page_source
+    # print('received html')
+    # soup = BeautifulSoup(html, "lxml")
+    # driver.quit()
+    # return soup
 
 def etl_data(soup):
     first_div = soup.find('p', string="2 Bed, 2 Bath").parent
@@ -109,5 +110,5 @@ def run_scheduler():
     # manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="14", minute="29", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
-    # run_scraper()
+    run_scraper()
     sched.start()
