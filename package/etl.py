@@ -90,7 +90,7 @@ def run_scraper():
     cheap_filter = [el for el in listings if el.current_rent < 7000]
     if bool(cheap_filter): send_alert("Cheap 2PCV bed/2bath availability. Act fast!")
 
-run_scraper()
+
 # GMT == NYC time +4
 def manage_scheduler(sched):
     today = datetime.today().date()
@@ -109,4 +109,5 @@ def run_scheduler():
     # manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="14", minute="29", second="50")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
+    run_scraper()
     sched.start()
