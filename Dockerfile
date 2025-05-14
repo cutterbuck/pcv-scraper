@@ -26,4 +26,4 @@ ENV DISPLAY=:99
 # Expose the port your application will run on
 EXPOSE 8080
 
-CMD ["python", "run.py", "--hostname", "0.0.0.0", "--port" "8080"]
+CMD python run.py --hostname 0.0.0.0 -port 8080
