@@ -1,5 +1,5 @@
 # Use a lightweight Python base image
-FROM python:3.10
+FROM python:3.12
 
 WORKDIR /app
 
@@ -19,11 +19,6 @@ RUN apt-get update && \
 RUN apt-get install -yqq unzip && \
     wget -O /tmp/chromedriver.zip "http://chromedriver.storage.googleapis.com/$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip" && \
     unzip /tmp/chromedriver.zip -d /usr/local/bin/
-
-RUN apt-get install -y chromium-browser
-
-# set display port to avoid crash
-ENV DISPLAY=:99
 
 # Expose the port your application will run on
 EXPOSE 8080
