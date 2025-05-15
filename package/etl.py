@@ -27,13 +27,14 @@ def scrape_stuytown():
     print("Hello world!!! Attempting to scrape")
     url = 'https://www.stuytown.com/nyc-apartments-for-rent?Order=low-price&PropertyName=Peter+Cooper+Village&Bedrooms=2&Flex=false&Bathrooms=2'
 
-    # CHROME
-    # import pdb; pdb.set_trace()
+    service = Service(ChromeDriverManager().install())
     options = webdriver.ChromeOptions()
+    options.add_argument("--disable-extensions")
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    options.add_argument("--enable-gpu")
+    driver = webdriver.Chrome(service=service, options=options)
     print("made it past driver")
     driver.get(url)
     html = driver.page_source
