@@ -5,13 +5,13 @@ from package.models import Listing, db
 
 
 def get_data():
-    print("new data check")
     available = db.session.query(Listing.building, Listing.floor, Listing.unit, Listing.status, Listing.current_rent, Listing.rent_change, Listing.initial_rent, Listing.last_updated, Listing.update_time, Listing.initial_posting_date, Listing.days_listed).filter(Listing.status == 'available').order_by(Listing.current_rent).all()
     unavailable = db.session.query(Listing.building, Listing.floor, Listing.unit, Listing.status, Listing.current_rent, Listing.rent_change, Listing.initial_rent, Listing.last_updated, Listing.update_time, Listing.initial_posting_date, Listing.days_listed).filter(Listing.status == 'unavailable').order_by(Listing.current_rent).all()
     all_listings = available + unavailable
     return [{"Building": el[0], "Floor": el[1], "Unit": el[2], "Status": el[3], "Rent": el[4], "Change": el[5], "Initial Rent": el[6], "Last Update": el[7].strftime('%m/%d/%Y'), "Time": el[8], "First Posted": el[9].strftime('%m/%d/%Y'), "Days Available": el[10]} for el in all_listings]
 
 def generate_table():
+    print("creating table")
     listings = get_data()
     col_names = ["Building", "Floor", "Unit", "Status", "Rent", "Change", "Initial Rent", "Last Update", "Time", "First Posted", "Days Available"]
     columns = [{'name': c, 'id': c} for c in col_names]
@@ -54,6 +54,7 @@ def generate_table():
     State('apt-listings-table', 'data')
 )
 def update_metrics(n_intervals, data):
+    print("new data check")
     new_data = get_data()
     if new_data == data:
         return no_update

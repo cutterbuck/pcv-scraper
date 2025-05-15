@@ -21,7 +21,7 @@ def send_alert(message):
         }), { "Content-type": "application/x-www-form-urlencoded" })
     conn.getresponse()
     print("sent alert!")
-
+send_alert("hello jake")
 def scrape_stuytown():
     print("Hello world!!! Attempting to scrape")
     url = 'https://www.stuytown.com/nyc-apartments-for-rent?Order=low-price&PropertyName=Peter+Cooper+Village&Bedrooms=2&Flex=false&Bathrooms=2'
