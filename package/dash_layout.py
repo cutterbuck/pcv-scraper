@@ -5,6 +5,7 @@ from package.models import Listing, db
 
 
 def get_data():
+    print("new data check")
     available = db.session.query(Listing.building, Listing.floor, Listing.unit, Listing.status, Listing.current_rent, Listing.rent_change, Listing.initial_rent, Listing.last_updated, Listing.update_time, Listing.initial_posting_date, Listing.days_listed).filter(Listing.status == 'available').order_by(Listing.current_rent).all()
     unavailable = db.session.query(Listing.building, Listing.floor, Listing.unit, Listing.status, Listing.current_rent, Listing.rent_change, Listing.initial_rent, Listing.last_updated, Listing.update_time, Listing.initial_posting_date, Listing.days_listed).filter(Listing.status == 'unavailable').order_by(Listing.current_rent).all()
     all_listings = available + unavailable
