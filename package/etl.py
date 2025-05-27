@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-from package.models import Listing, db
-from package.app import app
+# from package.models import Listing, db
+# from package.app import app
 import http, urllib, os, shutil
 
 
@@ -116,5 +116,3 @@ def run_scheduler():
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now())
     print("Starting scheduler")
     sched.start()
-
-run_scraper()
