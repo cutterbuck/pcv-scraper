@@ -1,5 +1,5 @@
-# from package.app import app
-# from package.etl import run_scheduler
+# from app import app
+# from app import run_scheduler
 #
 #
 #
@@ -12,7 +12,6 @@
     # app.run(debug=True, dev_tools_ui=False, use_reloader=False, port=8080)
 
 
-from package.etl import scrape_stuytown
+from etl import scrape_stuytown
 
 scrape_stuytown()
-import pdb; pdb.set_trace()
