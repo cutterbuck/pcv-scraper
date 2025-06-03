@@ -12,6 +12,5 @@
     # app.run(debug=True, dev_tools_ui=False, use_reloader=False, port=8080)
 
 
-from etl import scrape_stuytown
-
+from package.app import scrape_stuytown
 scrape_stuytown()
