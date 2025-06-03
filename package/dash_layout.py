@@ -1,29 +1,32 @@
 from dash import html, dcc, Input, Output, State, callback, dash_table, no_update
 from package.app import app
 from package.scrape import run_scraper
+from datetime import datetime
 
 
 
-listings, scrape_time = run_scraper()
+@callback(Output('memory-store', 'data'), Input('interval-component', 'n_intervals'), State('memory-store', 'data'))
+def update_store(n_intervals, data):
+    now = datetime.now()
+    today = now.date()
 
-@callback(Output('memory-output', 'data'), Input('memory-apartments', 'value'))
-def filter_countries(countries_selected):
-    if not countries_selected:
-        return df.to_dict('records')
-    dff = df[df['country'].isin(countries_selected)]
-    return dff.to_dict('records')
+    if now > datetime(today.year, today.month, today.day, 3, 30, 0) and now < datetime(today.year, today.month, today.day, 6, 31, 0):
+        new_listings = run_scraper()
+        if new_listings == data:
+            return data
+        else:
+            return new_listings
+    else:
+        return data
 
-@callback(Output('apt-listings-table', 'data'), Input('memory-output', 'data'))
+@callback(Output('apt-listings-table', 'data'), Input('memory-store', 'data'))
 def update_table(data):
-    if data is None:
-        return no_update
     return data
 
 def generate_table():
     return dash_table.DataTable(
             id='apt-listings-table',
-            data=listings,
-            columns=[{'name': col, 'id': col} for col in listings[0].keys()],
+            columns=[{'name': col, 'id': col} for col in ["Building", "Floor", "Unit", "Rent", "Date Available"]],
             cell_selectable=False,
             style_cell={
                 'font-family': "Open Sans, HelveticaNeue, Helvetica Neue, Helvetica, Arial, sans-serif",
@@ -52,8 +55,9 @@ def generate_table():
     )
 
 app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '8%', 'marginTop': '4%'}, children=[
-                dcc.Store(id='memory-output'),
+                dcc.Store(id='memory-store', data=run_scraper()),
                 html.H3('Current Peter Cooper Village 2 Bedroom 2 Bathroom Listings'),
-                html.P('Last scrape: ' + scrape_time.strftime('%I:%M%p on %b %-d, %Y')),
+                # html.P('Last scrape: ' + scrape_time.strftime('%I:%M%p on %b %-d, %Y')),
                 generate_table(),
+                dcc.Interval(id='interval-component', interval=960000)
             ])

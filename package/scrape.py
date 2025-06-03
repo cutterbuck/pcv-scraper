@@ -50,8 +50,8 @@ def etl_data(soup):
             floor = full_address[-1].split('-')[0]
             unit = full_address[-1].split('-')[1]
             rent = int(div.span.text.split(" ")[-1].replace(',', '').replace('$', ''))
-            # available_by =
-            scraped_listings.append(dict(Building=building, Floor=floor, Unit=unit, Rent=rent))
+            available_by = div.p.next.next.next.next.next.replace('Available ', '')
+            scraped_listings.append({"Building": building, "Floor": floor, "Unit": unit, "Rent": rent, "Date Available": available_by})
         return scraped_listings
     else:
         send_alert("Check PCV URL --> div classname might have changed")
@@ -59,8 +59,8 @@ def etl_data(soup):
 def run_scraper():
     soup = scrape_stuytown()
     listings = etl_data(soup)
-    now = datetime.now()
-    print(f"Scraped data at {now}")
+    # now = datetime.now()
+    # print(f"Scraped data at {now}")
     cheap_filter = [apt for apt in listings if apt['Rent'] < 7000]
     if bool(cheap_filter): send_alert("Cheap 2PCV bed/2bath availability. Act fast!")
-    return listings, now
+    return listings
