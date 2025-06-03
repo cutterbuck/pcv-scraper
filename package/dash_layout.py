@@ -1,31 +1,35 @@
 from dash import html, dcc, Input, Output, State, callback, dash_table, no_update
 from package.app import app
-from package.models import Listing, db
+from package.scrape import run_scraper
 
 
 
-def get_data():
-    available = db.session.query(Listing.building, Listing.floor, Listing.unit, Listing.status, Listing.current_rent, Listing.rent_change, Listing.initial_rent, Listing.last_updated, Listing.update_time, Listing.initial_posting_date, Listing.days_listed).filter(Listing.status == 'available').order_by(Listing.current_rent).all()
-    unavailable = db.session.query(Listing.building, Listing.floor, Listing.unit, Listing.status, Listing.current_rent, Listing.rent_change, Listing.initial_rent, Listing.last_updated, Listing.update_time, Listing.initial_posting_date, Listing.days_listed).filter(Listing.status == 'unavailable').order_by(Listing.current_rent).all()
-    all_listings = available + unavailable
-    return [{"Building": el[0], "Floor": el[1], "Unit": el[2], "Status": el[3], "Rent": el[4], "Change": el[5], "Initial Rent": el[6], "Last Update": el[7].strftime('%m/%d/%Y'), "Time": el[8], "First Posted": el[9].strftime('%m/%d/%Y'), "Days Available": el[10]} for el in all_listings]
+listings, scrape_time = run_scraper()
+
+@callback(Output('memory-output', 'data'), Input('memory-apartments', 'value'))
+def filter_countries(countries_selected):
+    if not countries_selected:
+        return df.to_dict('records')
+    dff = df[df['country'].isin(countries_selected)]
+    return dff.to_dict('records')
+
+@callback(Output('apt-listings-table', 'data'), Input('memory-output', 'data'))
+def update_table(data):
+    if data is None:
+        return no_update
+    return data
 
 def generate_table():
-    print("creating table")
-    listings = get_data()
-    col_names = ["Building", "Floor", "Unit", "Status", "Rent", "Change", "Initial Rent", "Last Update", "Time", "First Posted", "Days Available"]
-    columns = [{'name': c, 'id': c} for c in col_names]
     return dash_table.DataTable(
             id='apt-listings-table',
             data=listings,
-            columns=[{'name': c, 'id': c} for c in col_names],
-            merge_duplicate_headers=True,
+            columns=[{'name': col, 'id': col} for col in listings[0].keys()],
             cell_selectable=False,
             style_cell={
                 'font-family': "Open Sans, HelveticaNeue, Helvetica Neue, Helvetica, Arial, sans-serif",
                 'text-align': 'center',
                 'font-size': '12px',
-                'font-weight': '400',
+                'font-weight': '500',
                 'line-height': '1.6',
                 'padding': '2px 0px 2px 0px',
                 'width': '4%',
@@ -47,26 +51,9 @@ def generate_table():
             css=[{'selector': '.dash-spreadsheet tr', 'rule': 'height: 23px;'}],
     )
 
-
-@callback(
-    Output('apt-listings-table', 'data'),
-    Input('live-interval', 'n_intervals'),
-    State('apt-listings-table', 'data')
-)
-def update_metrics(n_intervals, data):
-    print("new data check")
-    new_data = get_data()
-    if new_data == data:
-        return no_update
-    else:
-        return new_data
-
-# app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '8%', 'marginTop': '4%'}, children=[
-#                 html.H4('Peter Cooper Village 2Bed/2Bath Listings:'),
-#                 generate_table(),
-#                 dcc.Interval(
-#                     id='live-interval',
-#                     interval=300000, # in milliseconds
-#                     n_intervals=0
-#                 )
-#             ])
+app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '8%', 'marginTop': '4%'}, children=[
+                dcc.Store(id='memory-output'),
+                html.H3('Current Peter Cooper Village 2 Bedroom 2 Bathroom Listings'),
+                html.P('Last scrape: ' + scrape_time.strftime('%I:%M%p on %b %-d, %Y')),
+                generate_table(),
+            ])
