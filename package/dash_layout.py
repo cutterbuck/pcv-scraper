@@ -61,12 +61,12 @@ def update_metrics(n_intervals, data):
     else:
         return new_data
 
-app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '8%', 'marginTop': '4%'}, children=[
-                html.H4('Peter Cooper Village 2Bed/2Bath Listings:'),
-                generate_table(),
-                dcc.Interval(
-                    id='live-interval',
-                    interval=300000, # in milliseconds
-                    n_intervals=0
-                )
-            ])
+# app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '8%', 'marginTop': '4%'}, children=[
+#                 html.H4('Peter Cooper Village 2Bed/2Bath Listings:'),
+#                 generate_table(),
+#                 dcc.Interval(
+#                     id='live-interval',
+#                     interval=300000, # in milliseconds
+#                     n_intervals=0
+#                 )
+#             ])
