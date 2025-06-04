@@ -1,23 +1,19 @@
-FROM --platform=linux/amd64 python:3.12
+FROM python:3.12
 
 WORKDIR /app
 
-RUN mkdir __logger
-
-# install google chrome
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-RUN echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
-RUN apt-get update && apt-get install -y google-chrome-stable
-
-# set display port to avoid crash
-ENV DISPLAY=:99
+COPY . /app
 
 RUN pip install --upgrade pip
 
-COPY . /app
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
-RUN pip install -r requirements.txt
+RUN apt-get update && apt-get install -y wget unzip && \
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt install -y ./google-chrome-stable_current_amd64.deb && \
+    rm google-chrome-stable_current_amd64.deb && \
+    apt-get clean
 
-RUN google-chrome --version
+RUN apt --fix-broken install
 
 CMD ["python", "run.py"]
