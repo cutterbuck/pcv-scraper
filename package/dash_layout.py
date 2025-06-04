@@ -5,19 +5,21 @@ from datetime import datetime
 
 
 
-@callback(Output('memory-store', 'data'), Input('interval-component', 'n_intervals'), State('memory-store', 'data'))
-def update_store(n_intervals, data):
+@callback(Output('memory-store', 'data'), Output('scrape-time-monitor', 'children'), Input('interval-component', 'n_intervals'), State('memory-store', 'data'), State('scrape-time-monitor', 'children'))
+def update_store(n_intervals, data, last_scrape_time):
     now = datetime.now()
     today = now.date()
 
-    if now > datetime(today.year, today.month, today.day, 3, 30, 0) and now < datetime(today.year, today.month, today.day, 6, 31, 0):
-        new_listings = run_scraper()
+    # if now > datetime(today.year, today.month, today.day, 3, 30, 0) and now < datetime(today.year, today.month, today.day, 6, 31, 0):
+    if now > datetime(today.year, today.month, today.day, 12, 30, 0) and now < datetime(today.year, today.month, today.day, 13, 31, 0):
+        print("Checking for new apartments:")
+        new_listings, new_scrape_time = run_scraper()
         if new_listings == data:
-            return data
+            return data, last_scrape_time
         else:
-            return new_listings
+            return new_listings, new_scrape_time
     else:
-        return data
+        return data, last_scrape_time
 
 @callback(Output('apt-listings-table', 'data'), Input('memory-store', 'data'))
 def update_table(data):
@@ -54,10 +56,15 @@ def generate_table():
             css=[{'selector': '.dash-spreadsheet tr', 'rule': 'height: 23px;'}],
     )
 
+data, first_scrape = run_scraper()
+
 app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '8%', 'marginTop': '4%'}, children=[
-                dcc.Store(id='memory-store', data=run_scraper()),
+                dcc.Store(id='memory-store', data=data),
                 html.H3('Current Peter Cooper Village 2 Bedroom 2 Bathroom Listings'),
-                # html.P('Last scrape: ' + scrape_time.strftime('%I:%M%p on %b %-d, %Y')),
+                html.Div(children=[
+                    html.P('Last scrape:', style={'width': '10%', 'display': 'inline-block', 'marginTop': '0px'}),
+                    html.P(first_scrape.strftime('%I:%M%p on %b %-d, %Y'), id='scrape-time-monitor', style={'width': '20%', 'display': 'inline-block', 'marginTop': '0px'})
+                ]),
                 generate_table(),
-                dcc.Interval(id='interval-component', interval=960000)
+                dcc.Interval(id='interval-component', interval=300000)
             ])
