@@ -11,11 +11,11 @@ def update_store(n_intervals, data, last_scrape_time):
     today = now.date()
 
     # if now > datetime(today.year, today.month, today.day, 3, 30, 0) and now < datetime(today.year, today.month, today.day, 6, 31, 0):
-    if now > datetime(today.year, today.month, today.day, 12, 30, 0) and now < datetime(today.year, today.month, today.day, 13, 31, 0):
+    if now > datetime(today.year, today.month, today.day, 12, 30, 0) and now < datetime(today.year, today.month, today.day, 13, 51, 0):
         print("Checking for new apartments:")
         new_listings, new_scrape_time = run_scraper()
         if new_listings == data:
-            return data, last_scrape_time
+            return data, new_scrape_time
         else:
             return new_listings, new_scrape_time
     else:
