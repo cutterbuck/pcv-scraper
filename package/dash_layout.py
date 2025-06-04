@@ -1,17 +1,17 @@
-from dash import html, dcc, Input, Output, State, callback, dash_table, no_update
+from dash import html, dcc, Input, Output, State, callback, dash_table
 from package.app import app
 from package.scrape import run_scraper
 from datetime import datetime
-
+from zoneinfo import ZoneInfo
 
 
 @callback(Output('memory-store', 'data'), Output('scrape-time-monitor', 'children'), Input('interval-component', 'n_intervals'), State('memory-store', 'data'), State('scrape-time-monitor', 'children'))
 def update_store(n_intervals, data, last_scrape_time):
-    now = datetime.now()
+    now = datetime.now().astimezone(ZoneInfo('America/New_York'))
     today = now.date()
 
     # if now > datetime(today.year, today.month, today.day, 3, 30, 0) and now < datetime(today.year, today.month, today.day, 6, 31, 0):
-    if now > datetime(today.year, today.month, today.day, 12, 30, 0) and now < datetime(today.year, today.month, today.day, 13, 51, 0):
+    if now > datetime(today.year, today.month, today.day, 18, 30, 0).astimezone(ZoneInfo('America/New_York')) and now < datetime(today.year, today.month, today.day, 18, 59, 0).astimezone(ZoneInfo('America/New_York')):
         print("Checking for new apartments:")
         new_listings, new_scrape_time = run_scraper()
         if new_listings == data:
