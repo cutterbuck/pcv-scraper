@@ -1,7 +1,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from datetime import datetime
-from package.dash_layout import update_trackers
+# from package.dash_layout import update_trackers
 from zoneinfo import ZoneInfo
 
 
@@ -9,15 +9,16 @@ def test_schedules():
     print("Hello world!")
 
 def manage_scheduler(sched):
-    print("Resetting scheduler for today")
+    print("Establishing scheduler jobs")
     # update_trackers()
     today = datetime.today().date()
-    start_time = datetime(today.year, today.month, today.day, 14, 55, 0).astimezone(ZoneInfo('America/New_York'))
+    start_time = datetime(today.year, today.month, today.day, 15, 00, 0).astimezone(ZoneInfo('America/New_York'))
     end_time = datetime(today.year, today.month, today.day, 15, 59, 0).astimezone(ZoneInfo('America/New_York'))
     sched.add_job(test_schedules, 'interval', minutes=5, start_date=start_time, end_date=end_time)
 
 def run_scheduler():
+    print("Resetting scheduler for today")
     sched = BackgroundScheduler(daemon=True)
-    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="14", minute="50", second="0")
+    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="14", minute="59", second="0")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now().astimezone(ZoneInfo('America/New_York')))
     sched.start()

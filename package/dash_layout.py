@@ -6,13 +6,13 @@ from package.scrape import run_scraper
 
 @callback(Output('apt-listings-table', 'data'), Output('scrape-time-monitor', 'children'), Input('interval-component', 'n_intervals'), State('scrape-time-monitor', 'children'))
 def update_store(n_intervals, memory_scrape_time):
-    if memory_scrape_time != scrape_time:
-        print("Inside callback. New scrape exists")
-        print('memory_scrape_time', memory_scrape_time)
-        print('memory_scrape_time', scrape_time)
-        return data, scrape_time
-    else:
-        return no_update
+    # if memory_scrape_time != scrape_time:
+    #     print("Inside callback. New scrape exists")
+    #     print('memory_scrape_time', memory_scrape_time)
+    #     print('memory_scrape_time', scrape_time)
+    #     return data, scrape_time
+    # else:
+    return no_update
     # return data, scrape_time
 
 def generate_table():
@@ -49,9 +49,9 @@ def generate_table():
 
 # data, scrape_time = run_scraper()
 
-def update_trackers():
-    global data, scrape_time
-    data, scrape_time = run_scraper()
+# def update_trackers():
+#     global data, scrape_time
+#     data, scrape_time = run_scraper()
 
 app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '8%', 'marginTop': '4%'}, children=[
                 html.H3('Current Peter Cooper Village 2 Bedroom 2 Bathroom Listings'),
