@@ -46,7 +46,7 @@ def generate_table():
     )
 
 
-# data, scrape_time = run_scraper()
+data, scrape_time = run_scraper()
 
 def update_trackers():
     global data, scrape_time
