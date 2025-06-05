@@ -6,14 +6,14 @@ from package.scrape import run_scraper
 
 @callback(Output('apt-listings-table', 'data'), Output('scrape-time-monitor', 'children'), Input('interval-component', 'n_intervals'), State('scrape-time-monitor', 'children'))
 def update_store(n_intervals, memory_scrape_time):
-    # if memory_scrape_time != scrape_time:
-    #     print("Inside callback. New scrape exists")
-    #     print('memory_scrape_time', memory_scrape_time)
-    #     print('memory_scrape_time', scrape_time)
-    #     return data, scrape_time
-    # else:
-    #     return no_update
-    return data, scrape_time
+    if memory_scrape_time != scrape_time:
+        print("Inside callback. New scrape exists")
+        print('memory_scrape_time', memory_scrape_time)
+        print('memory_scrape_time', scrape_time)
+        return data, scrape_time
+    else:
+        return no_update
+    # return data, scrape_time
 
 def generate_table():
     return dash_table.DataTable(
@@ -47,7 +47,7 @@ def generate_table():
     )
 
 
-data, scrape_time = run_scraper()
+# data, scrape_time = run_scraper()
 
 def update_trackers():
     global data, scrape_time
