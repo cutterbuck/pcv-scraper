@@ -1,8 +1,8 @@
 FROM python:3.10.10
 
-WORKDIR /
+WORKDIR /app
 
-COPY . /
+COPY . /app
 
 RUN pip install --upgrade pip
 
