@@ -12,13 +12,13 @@ def manage_scheduler(sched):
     print("Resetting scheduler jobs")
     update_trackers()
     today = datetime.today().date()
-    start_time = datetime(today.year, today.month, today.day, 20, 20, 0).astimezone(ZoneInfo('UTC'))
-    end_time = datetime(today.year, today.month, today.day, 20, 59, 0).astimezone(ZoneInfo('UTC'))
+    start_time = datetime(today.year, today.month, today.day, 20, 30, 0).astimezone(ZoneInfo('UTC'))
+    end_time = datetime(today.year, today.month, today.day, 21, 59, 0).astimezone(ZoneInfo('UTC'))
     sched.add_job(update_trackers, 'interval', minutes=5, start_date=start_time, end_date=end_time)
 
 def run_scheduler():
     print("Starting scheduler")
     sched = BackgroundScheduler(daemon=True)
-    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="20", minute="15", second="0")
+    manage_jobs_trigger = CronTrigger(year="*", month="*", day="*", hour="20", minute="25", second="0")
     sched.add_job(manage_scheduler, args=[sched], trigger=manage_jobs_trigger, start_date=datetime.now().astimezone(ZoneInfo('UTC')))
     sched.start()

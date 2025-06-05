@@ -9,10 +9,10 @@ def update_store(n_intervals, memory_scrape_time):
     if memory_scrape_time != scrape_time:
         print("Inside callback. New scrape exists")
         print('memory_scrape_time', memory_scrape_time)
-        print('memory_scrape_time', scrape_time)
+        print('scrape_time', scrape_time)
         return data, scrape_time
     else:
-        return data, scrape_time
+        return no_update
 
 def generate_table():
     return dash_table.DataTable(
