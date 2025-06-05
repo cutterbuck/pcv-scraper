@@ -46,7 +46,7 @@ def generate_table():
     )
 
 
-data, scrape_time = run_scraper()
+# data, scrape_time = run_scraper()
 
 def update_trackers():
     global data, scrape_time
@@ -59,5 +59,5 @@ app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '
                     html.P(id='scrape-time-monitor', style={'width': '20%', 'display': 'inline-block', 'marginTop': '0px'})
                 ]),
                 generate_table(),
-                dcc.Interval(id='interval-component', interval=15000)
+                dcc.Interval(id='interval-component', interval=60000)
             ])
