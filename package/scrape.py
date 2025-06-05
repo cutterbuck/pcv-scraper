@@ -59,7 +59,7 @@ def etl_data(soup):
 def run_scraper():
     soup = scrape_stuytown()
     listings = etl_data(soup)
-    now = datetime.now().astimezone(ZoneInfo('America/New_York'))
+    now = datetime.now().astimezone(ZoneInfo('America/New_York')).strftime('%I:%M%p on %b %-d, %Y')
     print(f"Scraped data at {now}")
     cheap_filter = [apt for apt in listings if apt['Rent'] < 7500]
     if bool(cheap_filter): send_alert("Cheap 2PCV bed/2bath availability. Act fast!")
