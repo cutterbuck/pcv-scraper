@@ -45,9 +45,6 @@ def generate_table():
             css=[{'selector': '.dash-spreadsheet tr', 'rule': 'height: 23px;'}],
     )
 
-
-# data, scrape_time = run_scraper()
-
 def update_trackers():
     global data, scrape_time
     data, scrape_time = run_scraper()
