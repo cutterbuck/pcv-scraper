@@ -16,7 +16,7 @@ def run_scheduler():
         year="*",
         month="*",
         day="*",
-        hour="18-20",
+        hour="7-10",
         minute="0,15,30,45",
         second="0",
         end_date=datetime(2025, 12, 31, 17, 0, 0).astimezone(ZoneInfo('UTC')),
