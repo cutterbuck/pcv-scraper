@@ -30,17 +30,34 @@ def scrape_stuytown():
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--enable-gpu")
     driver = webdriver.Chrome(service=service, options=options)
-    print("Driver success")
-    driver.get(url)
-    html = driver.page_source
-    soup = BeautifulSoup(html, "lxml")
+
+    attempts = 0
+    successes = 0
+    while attempts < 8 and successes < 1:
+        driver.get(url)
+        html = driver.page_source
+        soup = BeautifulSoup(html, "lxml")
+
+        try:
+            first_div = soup.find('p', string="2 Bed, 2 Bath").parent
+        except:
+            first_div = None
+
+        if bool(first_div):
+            successes += 1
+        attempts += 1
+        if attempts == 1 and successes == 1:
+            print("First scrape success")
+        elif attempts > 1 and successes == 1:
+            print("Re-scrape success")
+        else:
+            print("Scrape attempt" + str(attempts) + " failed. Will try again.")
+
     driver.quit()
     return soup
 
 def etl_data(soup):
-    try:
         first_div = soup.find('p', string="2 Bed, 2 Bath").parent
-        print('first_div', first_div)
         curr_classname = first_div['class'][0]
         mydivs = soup.find_all('div', {"class": curr_classname})
         scraped_listings = []
@@ -55,10 +72,10 @@ def etl_data(soup):
                 available_by = div.p.next.next.next.next.next.replace('Available ', '')
                 scraped_listings.append({"Building": building, "Floor": floor, "Unit": unit, "Rent": rent, "Date Available": available_by})
             return scraped_listings
-    except:
-        print("Check PCV URL --> div classname might have changed")
-        # import pdb; pdb.set_trace()
-        # send_alert("Check PCV URL --> div classname might have changed")
+        else:
+            print("Check PCV URL --> div classname might have changed")
+            import pdb; pdb.set_trace()
+            send_alert("Check PCV URL --> div classname might have changed")
 
 def run_scraper():
     soup = scrape_stuytown()
