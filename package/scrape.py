@@ -57,7 +57,7 @@ def etl_data(soup):
             return scraped_listings
     except:
         print("Check PCV URL --> div classname might have changed")
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         # send_alert("Check PCV URL --> div classname might have changed")
 
 def run_scraper():
