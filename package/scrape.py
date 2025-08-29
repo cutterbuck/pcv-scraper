@@ -24,7 +24,7 @@ def scrape_stuytown():
 
     attempts = 0
     successes = 0
-    while attempts < 8 and successes < 1:
+    while attempts < 10 and successes < 1:
         service = Service(ChromeDriverManager().install())
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-extensions")
@@ -36,12 +36,7 @@ def scrape_stuytown():
         driver.get(url)
         html = driver.page_source
         soup = BeautifulSoup(html, "lxml")
-
-        try:
-            first_div = soup.find('p', string="2 Bed, 2 Bath").parent
-        except:
-            first_div = None
-
+        first_div = soup.find('p', string="2 Bed, 2 Bath")
         if bool(first_div):
             successes += 1
         attempts += 1
