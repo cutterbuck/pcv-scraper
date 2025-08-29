@@ -22,18 +22,17 @@ def scrape_stuytown():
     print("Attempting a scrape...")
     url = 'https://www.stuytown.com/nyc-apartments-for-rent?Order=low-price&PropertyName=Peter+Cooper+Village&Bedrooms=2&Flex=false&Bathrooms=2'
 
-    service = Service(ChromeDriverManager().install())
-    options = webdriver.ChromeOptions()
-    options.add_argument("--disable-extensions")
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--enable-gpu")
-    driver = webdriver.Chrome(service=service, options=options)
-
     attempts = 0
     successes = 0
     while attempts < 8 and successes < 1:
+        service = Service(ChromeDriverManager().install())
+        options = webdriver.ChromeOptions()
+        options.add_argument("--disable-extensions")
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--enable-gpu")
+        driver = webdriver.Chrome(service=service, options=options)
         driver.get(url)
         html = driver.page_source
         soup = BeautifulSoup(html, "lxml")
@@ -51,7 +50,7 @@ def scrape_stuytown():
         elif attempts > 1 and successes == 1:
             print("Re-scrape success")
         else:
-            print("Scrape attempt" + str(attempts) + " failed. Will try again.")
+            print("Scrape attempt " + str(attempts) + " failed. Will try again.")
 
     driver.quit()
     return soup
