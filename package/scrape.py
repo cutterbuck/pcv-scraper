@@ -38,23 +38,27 @@ def scrape_stuytown():
     return soup
 
 def etl_data(soup):
-    first_div = soup.find('p', string="2 Bed, 2 Bath").parent
-    curr_classname = first_div['class'][0]
-    mydivs = soup.find_all('div', {"class": curr_classname})
-    scraped_listings = []
+    try:
+        first_div = soup.find('p', string="2 Bed, 2 Bath").parent
+        print('first_div', first_div)
+        curr_classname = first_div['class'][0]
+        mydivs = soup.find_all('div', {"class": curr_classname})
+        scraped_listings = []
 
-    if bool(mydivs):
-        for div in mydivs:
-            full_address = div.next.next.next.text.split(', Apt ')
-            building = full_address[0]
-            floor = full_address[-1].split('-')[0]
-            unit = full_address[-1].split('-')[1]
-            rent = int(div.span.text.split(" ")[-1].replace(',', '').replace('$', ''))
-            available_by = div.p.next.next.next.next.next.replace('Available ', '')
-            scraped_listings.append({"Building": building, "Floor": floor, "Unit": unit, "Rent": rent, "Date Available": available_by})
-        return scraped_listings
-    else:
-        send_alert("Check PCV URL --> div classname might have changed")
+        if bool(mydivs):
+            for div in mydivs:
+                full_address = div.next.next.next.text.split(', Apt ')
+                building = full_address[0]
+                floor = full_address[-1].split('-')[0]
+                unit = full_address[-1].split('-')[1]
+                rent = int(div.span.text.split(" ")[-1].replace(',', '').replace('$', ''))
+                available_by = div.p.next.next.next.next.next.replace('Available ', '')
+                scraped_listings.append({"Building": building, "Floor": floor, "Unit": unit, "Rent": rent, "Date Available": available_by})
+            return scraped_listings
+    except:
+        print("Check PCV URL --> div classname might have changed")
+        import pdb; pdb.set_trace()
+        # send_alert("Check PCV URL --> div classname might have changed")
 
 def run_scraper():
     soup = scrape_stuytown()
