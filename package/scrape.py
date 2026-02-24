@@ -102,7 +102,7 @@ def etl_data(soup):
         return []
 
 
-def run_scraper():
+def run_scraper(alert=False):
     soup = scrape_stuytown()
     listings = etl_data(soup)
     now = (
@@ -113,7 +113,8 @@ def run_scraper():
     print(f"Scraped data at {now}")
     if not listings:
         return [], now
-    cheap_filter = [apt for apt in listings if apt["Rent"] < 7200]
-    if bool(cheap_filter):
-        send_alert("Cheap PCV 2 bed/2 bath availability. Act fast!")
+    if alert:
+        cheap_filter = [apt for apt in listings if apt["Rent"] < 7200]
+        if bool(cheap_filter):
+            send_alert("Cheap PCV 2 bed/2 bath availability. Act fast!")
     return listings, now

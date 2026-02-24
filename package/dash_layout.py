@@ -51,9 +51,9 @@ def generate_table():
             css=[{'selector': '.dash-spreadsheet tr', 'rule': 'height: 23px;'}],
     )
 
-def update_trackers():
+def update_trackers(alert=False):
     global data, scrape_time
-    data, scrape_time = run_scraper()
+    data, scrape_time = run_scraper(alert=alert)
 
 app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '8%', 'marginTop': '4%'}, children=[
                 html.H3('Current Peter Cooper Village 2 Bedroom 2 Bathroom Listings'),

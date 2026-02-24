@@ -24,5 +24,5 @@ def run_scheduler():
         end_date=datetime(2026, 12, 31, 17, 0, 0).astimezone(ZoneInfo('UTC')),
         timezone=ZoneInfo('UTC')
     )
-    sched.add_job(update_trackers, trigger=trigger)
+    sched.add_job(update_trackers, trigger=trigger, kwargs={"alert": True})
     sched.start()
