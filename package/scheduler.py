@@ -1,3 +1,5 @@
+import threading
+
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.combining import AndTrigger
 from apscheduler.triggers.cron import CronTrigger
@@ -9,7 +11,7 @@ from zoneinfo import ZoneInfo
 
 def run_scheduler():
     print("Starting scheduler")
-    update_trackers()
+    threading.Thread(target=update_trackers, daemon=True).start()
 
     sched = BackgroundScheduler(daemon=True)
     trigger = CronTrigger(

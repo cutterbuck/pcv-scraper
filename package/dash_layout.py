@@ -2,10 +2,14 @@ from dash import html, dcc, Input, Output, State, callback, dash_table, no_updat
 from package.app import app
 from package.scrape import run_scraper
 
+data = []
+scrape_time = None
 
 
 @callback(Output('apt-listings-table', 'data'), Output('scrape-time-monitor', 'children'), Input('interval-component', 'n_intervals'), State('scrape-time-monitor', 'children'))
 def update_store(n_intervals, memory_scrape_time):
+    if scrape_time is None:
+        return no_update
     if memory_scrape_time != scrape_time:
         print("Inside callback. New scrape exists")
         print('memory_scrape_time', memory_scrape_time)
