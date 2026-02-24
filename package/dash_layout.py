@@ -6,7 +6,14 @@ data = []
 scrape_time = None
 
 
-@callback(Output('apt-listings-table', 'data'), Output('scrape-time-monitor', 'children'), Output('refresh-button', 'disabled'), Input('interval-component', 'n_intervals'), Input('refresh-button', 'n_clicks'), State('scrape-time-monitor', 'children'))
+@callback(
+    Output('apt-listings-table', 'data'),
+    Output('scrape-time-monitor', 'children'),
+    Output('refresh-button', 'disabled'),
+    Input('interval-component', 'n_intervals'),
+    Input('refresh-button', 'n_clicks'),
+    State('scrape-time-monitor', 'children')
+)
 def update_store(n_intervals, n_clicks, memory_scrape_time):
     if ctx.triggered_id == 'refresh-button' and n_clicks:
         update_trackers()
