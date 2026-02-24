@@ -14,4 +14,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 COPY . .
 
+ENV PYTHONUNBUFFERED=1
+
 CMD ["python", "run.py"]
