@@ -10,21 +10,23 @@ scrape_time = None
     Output('apt-listings-table', 'data'),
     Output('scrape-time-monitor', 'children'),
     Output('refresh-button', 'disabled'),
+    Output('loading-message', 'style'),
     Input('interval-component', 'n_intervals'),
     Input('refresh-button', 'n_clicks'),
     State('scrape-time-monitor', 'children')
 )
 def update_store(n_intervals, n_clicks, memory_scrape_time):
+    hide = {'display': 'none'}
     if ctx.triggered_id == 'refresh-button' and n_clicks:
         update_trackers()
-        return data, scrape_time, False
+        return data, scrape_time, False, hide
     if scrape_time is None:
         return no_update
     if memory_scrape_time != scrape_time:
         print("Inside callback. New scrape exists")
         print('memory_scrape_time', memory_scrape_time)
         print('scrape_time', scrape_time)
-        return data, scrape_time, False
+        return data, scrape_time, False, hide
     else:
         return no_update
 
@@ -64,8 +66,14 @@ def update_trackers(alert=False):
     data, scrape_time = run_scraper(alert=alert)
 
 app.clientside_callback(
-    "function(n_clicks) { if (n_clicks > 0) { return true; } return window.dash_clientside.no_update; }",
+    """function(n_clicks) {
+        if (n_clicks > 0) {
+            return [true, {'display': 'block', 'fontStyle': 'italic', 'color': '#888', 'marginTop': '10px'}];
+        }
+        return [window.dash_clientside.no_update, window.dash_clientside.no_update];
+    }""",
     Output('refresh-button', 'disabled', allow_duplicate=True),
+    Output('loading-message', 'style', allow_duplicate=True),
     Input('refresh-button', 'n_clicks'),
     prevent_initial_call=True
 )
@@ -77,10 +85,7 @@ app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '
                     html.P(id='scrape-time-monitor', style={'width': '20%', 'display': 'inline-block', 'marginTop': '0px'})
                 ]),
                 html.Button('Refresh', id='refresh-button', n_clicks=0),
-                dcc.Loading(
-                    id='loading-indicator',
-                    type='default',
-                    children=generate_table()
-                ),
+                html.P('Scraping...', id='loading-message', style={'display': 'none'}),
+                generate_table(),
                 dcc.Interval(id='interval-component', interval=5000)
             ])
