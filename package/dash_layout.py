@@ -6,8 +6,10 @@ data = []
 scrape_time = None
 
 
-@callback(Output('apt-listings-table', 'data'), Output('scrape-time-monitor', 'children'), Input('interval-component', 'n_intervals'), State('scrape-time-monitor', 'children'))
-def update_store(n_intervals, memory_scrape_time):
+@callback(Output('apt-listings-table', 'data'), Output('scrape-time-monitor', 'children'), Input('interval-component', 'n_intervals'), Input('refresh-button', 'n_clicks'), State('scrape-time-monitor', 'children'))
+def update_store(n_intervals, n_clicks, memory_scrape_time):
+    if n_clicks:
+        update_trackers()
     if scrape_time is None:
         return no_update
     if memory_scrape_time != scrape_time:
@@ -59,6 +61,7 @@ app.layout = html.Div(id='table-wrapper', style={'width': '80%', 'marginLeft': '
                     html.P('Last scrape:', style={'width': '10%', 'display': 'inline-block', 'marginTop': '0px'}),
                     html.P(id='scrape-time-monitor', style={'width': '20%', 'display': 'inline-block', 'marginTop': '0px'})
                 ]),
+                html.Button('Refresh', id='refresh-button', n_clicks=0),
                 generate_table(),
                 dcc.Interval(id='interval-component', interval=60000)
             ])
