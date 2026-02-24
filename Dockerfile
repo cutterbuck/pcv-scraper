@@ -1,18 +1,17 @@
-FROM python:3.12
+FROM --platform=linux/amd64 python:3.12-slim
 
 WORKDIR /app
-COPY . /app
 
-RUN pip install --upgrade pip
-
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
-
-RUN apt-get update && apt-get install -y wget unzip && \
+RUN apt-get update && apt-get install -y wget gnupg && \
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
     apt install -y ./google-chrome-stable_current_amd64.deb && \
     rm google-chrome-stable_current_amd64.deb && \
-    apt-get clean
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt --fix-broken install
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+COPY . .
 
 CMD ["python", "run.py"]

@@ -7,6 +7,9 @@ from zoneinfo import ZoneInfo
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 
@@ -45,6 +48,12 @@ def scrape_stuytown():
     while attempts < 10 and successes < 1:
         driver = webdriver.Chrome(service=service, options=options)
         driver.get(url)
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//p[text()='2 Bed, 2 Bath']"))
+            )
+        except Exception:
+            pass
         html = driver.page_source
         soup = BeautifulSoup(html, "lxml")
         first_div = soup.find("p", string="2 Bed, 2 Bath")
