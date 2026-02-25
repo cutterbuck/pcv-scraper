@@ -114,7 +114,7 @@ def run_scraper(alert=False):
     if not listings:
         return [], now
     if alert:
-        cheap_filter = [apt for apt in listings if apt["Rent"] < 7200]
+        cheap_filter = [apt for apt in listings if apt["Rent"] < 6800]
         if bool(cheap_filter):
             send_alert("Cheap PCV 2 bed/2 bath availability. Act fast!")
     return listings, now
