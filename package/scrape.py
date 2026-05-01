@@ -6,11 +6,9 @@ from zoneinfo import ZoneInfo
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 
 
 def send_alert(message):
@@ -35,7 +33,6 @@ def scrape_stuytown():
     print("Attempting a scrape...")
     url = "https://www.stuytown.com/nyc-apartments-for-rent?Order=low-price&PropertyName=Peter+Cooper+Village&Bedrooms=2&Flex=false&Bathrooms=2"
 
-    service = Service(ChromeDriverManager().install())
     options = webdriver.ChromeOptions()
     options.add_argument("--disable-extensions")
     options.add_argument("--headless")
@@ -46,7 +43,7 @@ def scrape_stuytown():
     attempts = 0
     successes = 0
     while attempts < 10 and successes < 1:
-        driver = webdriver.Chrome(service=service, options=options)
+        driver = webdriver.Chrome(options=options)
         driver.get(url)
         try:
             WebDriverWait(driver, 10).until(
