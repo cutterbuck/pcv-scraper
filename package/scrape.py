@@ -35,18 +35,24 @@ def scrape_stuytown():
     url = "https://www.stuytown.com/nyc-apartments-for-rent?Order=low-price&PropertyName=Peter+Cooper+Village&Bedrooms=2&Flex=false&Bathrooms=2"
 
     options = webdriver.ChromeOptions()
-    options.binary_location = "/usr/bin/chromium"
     options.add_argument("--disable-extensions")
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--enable-gpu")
 
+    use_system_chromium = os.path.exists("/usr/bin/chromium")
+    if use_system_chromium:
+        options.binary_location = "/usr/bin/chromium"
+
     attempts = 0
     successes = 0
     while attempts < 3 and successes < 1:
-        service = Service(executable_path="/usr/bin/chromedriver")
-        driver = webdriver.Chrome(service=service, options=options)
+        if use_system_chromium:
+            service = Service(executable_path="/usr/bin/chromedriver")
+            driver = webdriver.Chrome(service=service, options=options)
+        else:
+            driver = webdriver.Chrome(options=options)
         driver.get(url)
         try:
             WebDriverWait(driver, 10).until(
@@ -56,6 +62,13 @@ def scrape_stuytown():
             pass
         html = driver.page_source
         soup = BeautifulSoup(html, "lxml")
+
+        no_results = soup.find(string=lambda t: t and "don't have anything" in t)
+        if no_results:
+            print("No apartments available")
+            driver.quit()
+            return None
+
         first_div = soup.find("p", string="2 Bed, 2 Bath")
         if bool(first_div):
             successes += 1
@@ -104,6 +117,14 @@ def etl_data(soup):
 
 def run_scraper(alert=False):
     soup = scrape_stuytown()
+    if soup is None:
+        now = (
+            datetime.now()
+            .astimezone(ZoneInfo("America/New_York"))
+            .strftime("%I:%M%p on %b %-d, %Y")
+        )
+        print(f"No availability at {now}")
+        return [], now
     listings = etl_data(soup)
     now = (
         datetime.now()
