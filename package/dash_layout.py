@@ -1,3 +1,6 @@
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from dash import html, dcc, Input, Output, State, callback, ctx, dash_table, no_update
 from package.app import app
 from package.scrape import run_scraper
@@ -63,7 +66,15 @@ def generate_table():
 
 def update_trackers(alert=False):
     global data, scrape_time
-    data, scrape_time = run_scraper(alert=alert)
+    try:
+        data, scrape_time = run_scraper(alert=alert)
+    except Exception as e:
+        print(f"Scrape failed: {e}")
+        scrape_time = (
+            datetime.now()
+            .astimezone(ZoneInfo("America/New_York"))
+            .strftime("%I:%M%p on %b %-d, %Y")
+        )
 
 app.clientside_callback(
     """function(n_clicks) {
