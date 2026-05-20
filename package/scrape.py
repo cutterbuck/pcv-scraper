@@ -44,7 +44,7 @@ def scrape_stuytown():
 
     attempts = 0
     successes = 0
-    while attempts < 10 and successes < 1:
+    while attempts < 3 and successes < 1:
         service = Service(executable_path="/usr/bin/chromedriver")
         driver = webdriver.Chrome(service=service, options=options)
         driver.get(url)

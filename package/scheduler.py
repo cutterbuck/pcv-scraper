@@ -11,7 +11,6 @@ from zoneinfo import ZoneInfo
 
 def run_scheduler():
     print("Starting scheduler")
-    threading.Thread(target=update_trackers, daemon=True).start()
 
     sched = BackgroundScheduler(daemon=True)
     trigger = CronTrigger(
@@ -25,4 +24,5 @@ def run_scheduler():
         timezone=ZoneInfo('UTC')
     )
     sched.add_job(update_trackers, trigger=trigger, kwargs={"alert": True})
+    sched.add_job(update_trackers, id="startup_scrape")
     sched.start()
