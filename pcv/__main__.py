@@ -52,6 +52,15 @@ def main(argv: list[str] | None = None) -> int:
         stream=sys.stdout,
     )
 
+    # Load .env for local runs. In production the platform supplies the environment,
+    # so python-dotenv is a dev-only dependency and its absence is not an error.
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        pass
+    else:
+        load_dotenv()
+
     try:
         config = Config.from_env()
     except ConfigError as exc:
