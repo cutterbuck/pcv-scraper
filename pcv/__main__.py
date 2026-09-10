@@ -39,6 +39,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="with --once, scrape and log results without notifying Slack",
     )
+    parser.add_argument(
+        "--heartbeat",
+        action="store_true",
+        help="send a single heartbeat and exit, to verify the ops webhook",
+    )
     args = parser.parse_args(argv)
 
     logging.basicConfig(
@@ -54,6 +59,10 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     runner = build_runner(config)
+
+    if args.heartbeat:
+        runner.send_heartbeat()
+        return 0
 
     if args.once:
         runner.run_once(alert=not args.no_alert)

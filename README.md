@@ -83,6 +83,7 @@ a Sleep Focus. Two settings are needed or the alert will queue silently until mo
 python -m pcv                    # start the scheduler and block
 python -m pcv --once             # single scrape, alerts if warranted
 python -m pcv --once --no-alert  # single scrape, log only — good for a smoke test
+python -m pcv --heartbeat        # send one heartbeat, to verify the ops webhook
 ```
 
 ## Configuration
