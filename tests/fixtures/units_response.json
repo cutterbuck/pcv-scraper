@@ -1,0 +1,68 @@
+{
+  "count": 2,
+  "unitModels": [
+    {
+      "unitSpk": "P~NYPC21~B~370~U~08-G",
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "price": 8477,
+      "sqft": 1211,
+      "unitNumber": "08-G",
+      "availableDate": "2026-08-26T00:00:00Z",
+      "isAvailable": true,
+      "isFlex": false,
+      "hasExtraBedroom": false,
+      "virtualTourUrl": null,
+      "isSurchargeIncluded": false,
+      "unitRates": {
+        "12": 8478,
+        "24": 8477
+      },
+      "description": null,
+      "isCapped": true,
+      "property": {
+        "name": "Peter Cooper Village"
+      },
+      "building": {
+        "address": "370 FIRST AVENUE",
+        "buildingName": "370 FIRST AVENUE"
+      },
+      "finish": {
+        "searchCode": "Modern",
+        "name": "Modern"
+      }
+    },
+    {
+      "unitSpk": "P~NYPC21~B~390~U~09-C",
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "price": 8889,
+      "sqft": 1211,
+      "unitNumber": "09-C",
+      "availableDate": "2026-09-11T00:00:00Z",
+      "isAvailable": true,
+      "isFlex": false,
+      "hasExtraBedroom": false,
+      "virtualTourUrl": null,
+      "isSurchargeIncluded": false,
+      "unitRates": {
+        "12": 8889,
+        "24": 8889
+      },
+      "description": null,
+      "isCapped": false,
+      "property": {
+        "name": "Peter Cooper Village"
+      },
+      "building": {
+        "address": "390 FIRST AVENUE",
+        "buildingName": "390 FIRST AVENUE"
+      },
+      "finish": {
+        "searchCode": "Classic",
+        "name": "Classic"
+      }
+    }
+  ],
+  "doIncentivesExist": false
+}

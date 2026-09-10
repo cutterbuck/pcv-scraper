@@ -1,3 +1,7 @@
 __pycache__
 *.pyc
 .claude
+.env
+.venv
+.pytest_cache
+pcv-state.json

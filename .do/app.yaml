@@ -1,0 +1,48 @@
+# DigitalOcean App Platform spec.
+#
+# This deploys a single Worker -- a long-running process with no HTTP listener,
+# which is what a scheduled scraper wants. There is no web service and no
+# public URL; alerts arrive in Slack.
+#
+# Apply with:
+#   doctl apps create --spec .do/app.yaml
+# or update an existing app:
+#   doctl apps update <APP_ID> --spec .do/app.yaml
+name: pcv-scraper
+region: nyc
+
+workers:
+  - name: scraper
+    instance_size_slug: apps-s-1vcpu-0.5gb  # $5/mo shared, 512 MiB
+    instance_count: 1
+
+    github:
+      repo: cutterbuck/pcv-scraper
+      branch: main
+      deploy_on_push: true
+
+    dockerfile_path: Dockerfile
+
+    envs:
+      # Set both as SECRETs in the DO control panel; do not commit the real URLs.
+      # Apartment alerts -> shared channel.
+      - key: SLACK_WEBHOOK_URL
+        scope: RUN_TIME
+        type: SECRET
+      # Heartbeat and failure notices -> private channel, just you.
+      - key: SLACK_OPS_WEBHOOK_URL
+        scope: RUN_TIME
+        type: SECRET
+      # Set high while testing so alerts actually fire; drop to ~7000 for real use.
+      - key: RENT_THRESHOLD
+        scope: RUN_TIME
+        value: "9000"
+      - key: TIMEZONE
+        scope: RUN_TIME
+        value: America/New_York
+      - key: SCRAPE_HOURS
+        scope: RUN_TIME
+        value: "3-7"
+      - key: SCRAPE_MINUTES
+        scope: RUN_TIME
+        value: "0,15,30,45"
