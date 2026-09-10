@@ -40,9 +40,13 @@ This version treats an unreadable response as an error, not as an empty result:
 
 ## Setup
 
+Python 3.12, matching the deployed image.
+
 ```bash
-pip install -r requirements.txt
-cp .env.example .env    # then fill in the webhook URLs
+conda create -n pcv python=3.12 -y
+conda activate pcv
+pip install -r requirements-dev.txt   # or requirements.txt to skip pytest
+cp .env.example .env                  # then fill in the webhook URLs
 ```
 
 ### Two channels

@@ -1,0 +1,6 @@
+[tool.pytest.ini_options]
+# Put the project root on sys.path so `pytest` finds the `pcv` package without an
+# editable install. Bare `pytest` does not add the working directory to sys.path the
+# way `python -m pytest` does.
+pythonpath = ["."]
+testpaths = ["tests"]
