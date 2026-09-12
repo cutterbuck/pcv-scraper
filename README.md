@@ -71,11 +71,16 @@ heartbeat never trains you to swipe these away.
 
 ### Make sure the alert actually reaches you
 
-Slack mobile notifications respect Do Not Disturb, and at 4AM your phone is likely in
-a Sleep Focus. Two settings are needed or the alert will queue silently until morning:
+An alert that posts successfully still won't wake you unless the recipient's phone is
+configured for it. Slack suppresses notifications overnight by default, and a bot message
+doesn't mention anyone by name.
 
-1. **iOS** → Settings → Focus → Sleep → **Allowed Apps** → add Slack.
-2. **Slack mobile** → Notifications → set the notification schedule to allow 3–7AM.
+**[docs/slack-setup.md](docs/slack-setup.md)** is a step-by-step guide written to hand to
+anyone joining `#pcv-alerts`. Send it to every new member — none of it is obvious, and
+every failure mode looks identical from the sending side.
+
+The setting that catches everyone is Slack's per-workspace **notification schedule**, which
+defaults to business hours and silently drops 4AM alerts.
 
 ## Running
 
