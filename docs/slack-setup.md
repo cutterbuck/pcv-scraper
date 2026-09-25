@@ -70,9 +70,23 @@ your desktop and your phone stays silent.
 Summary batches notifications for later delivery, so a 4AM alert would reach you hours late.
 Slack appearing in the list is normal; just confirm it isn't switched on.
 
-**Settings → Focus → Sleep → Allowed Apps** — **add Slack**. Without this, Sleep Focus
-silences the alert during exactly the hours that matter. Add it to any other overnight Focus
-modes too.
+**Settings → Focus** — this one is worth doing carefully, because it's where people get caught.
+
+Only one Focus runs at a time, and each has its own separate allow-list. Allowing Slack in
+**Sleep** does nothing if the Focus actually running at 4AM is **Do Not Disturb**.
+
+1. Tap each Focus mode in turn — Do Not Disturb, Sleep, Personal, Work
+2. Check each for a **Schedule** that covers overnight hours (a DND schedule like 23:00–07:00
+   is common, and it silences the alert completely)
+3. In each one: **Allow Notifications → Apps → add Slack**
+4. Confirm the list says **Allow Notifications From**, not **Silence Notifications From** — that
+   toggle inverts the meaning, so Slack being listed would *block* it
+
+Adding Slack to every Focus mode takes a couple of minutes and means you don't have to work out
+which one wins at 4AM.
+
+To see which Focus is currently active: its name appears at the top of the lock screen, or
+swipe down from the top-right and long-press the **Focus** button.
 
 ### Android
 
@@ -102,7 +116,7 @@ the channel normally either way. Watching one arrive is the only way to know.
 | What you see | Almost certainly |
 | --- | --- |
 | Message is in the channel, no notification | Notification schedule |
-| Works during the day, never overnight | Notification schedule, or Sleep Focus missing Slack |
+| Works during the day, never overnight | A Focus mode you didn't check — often Do Not Disturb on an overnight schedule — or the Slack notification schedule |
 | Works at every hour except the one the schedule starts | Schedule boundary — set it to all hours |
 | Works on laptop, never on phone | Notify Me on Mobile |
 | Notification arrives but hides the text | Show Previews not set to Always |
