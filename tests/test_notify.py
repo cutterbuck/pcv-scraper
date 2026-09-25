@@ -40,6 +40,7 @@ def test_listings_alert_payload(notifier, session):
     # `text` is what shows on a phone's lock screen, so the price must be in it.
     assert "under $7,000" in payload["text"]
     assert "1 PCV apartment " in payload["text"]
+    assert "cheapest $6,500, 370 First Avenue 08-G" in payload["text"]
 
     body = payload["blocks"][1]["text"]["text"]
     assert "$6,500/mo" in body
@@ -58,6 +59,19 @@ def test_alert_pluralises(notifier, session):
     )
 
     assert "2 PCV apartments " in session.posts[0]["json"]["text"]
+
+
+def test_headline_names_the_cheapest_not_the_first(notifier, session):
+    """Listings arrive price-ascending from the API, but don't rely on that."""
+    notifier.send_listings_alert(
+        [make_listing("a", 6900, "11-A"), make_listing("b", 6100, "02-B")],
+        url="https://stuytown.test/search",
+        threshold=7000,
+    )
+
+    text = session.posts[0]["json"]["text"]
+    assert "cheapest $6,100, 370 First Avenue 02-B" in text
+    assert "$6,900" not in text
 
 
 def test_heartbeat_payload(notifier, session):

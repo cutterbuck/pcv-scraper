@@ -34,9 +34,14 @@ class SlackNotifier:
 
     def send_listings_alert(self, listings: list[Listing], url: str, threshold: int) -> None:
         count = len(listings)
+        # Slack only previews `text` on a lock screen, so name the cheapest unit there.
+        # Otherwise the push says how many apartments there are but not whether any is
+        # worth getting out of bed for.
+        cheapest = min(listings, key=lambda listing: listing.rent)
         headline = (
             f":rotating_light: {count} PCV apartment{'s' if count != 1 else ''} "
-            f"under ${threshold:,} — act fast!"
+            f"under ${threshold:,} — cheapest ${cheapest.rent:,}, "
+            f"{cheapest.building} {cheapest.unit_number}"
         )
         lines = "\n".join(f"• {listing.describe()}" for listing in listings)
         self.send(
