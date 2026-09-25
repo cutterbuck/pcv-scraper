@@ -26,22 +26,25 @@ Some versions call this *"Let you know about"* → **Everything**. The default i
 messages, mentions & keywords" — the bot doesn't mention you by name, so on the default you
 may get nothing.
 
-### Notification schedule → **Every day, 12:00 AM to 12:00 AM**
+### Notification schedule → **Every day, 12:00 AM to 11:30 PM**
 
 **This is the one that catches everyone.** Slack sets a schedule by default, often business
 hours on weekdays, and silently drops everything outside it. Alerts arrive around 4AM, right
 in the blocked window.
 
-Tap **Allow notifications**, choose **Every day**, then set **Start** and **End** both to
-**12:00 AM**. Midnight-to-midnight is how Slack expresses "all hours" — there's no explicit
-always-on option.
+Tap **Allow notifications**, choose **Every day**, then set **Start** to **12:00 AM** and
+**End** to the latest option available — **11:30 PM**. Slack requires the end to be after the
+start, so it won't accept a true 24-hour window; 12:00 AM–11:30 PM is as close as it gets.
 
-Don't just widen the window to cover 3–7AM. An alert arriving in the same minute the schedule
-opens can be dropped, which is a genuinely confusing failure: notifications work all day and
-silently vanish at exactly the hour you care about. Set it to all hours and there's no
-boundary to land on.
+The half hour before midnight stays paused, which costs nothing: alerts only ever fire between
+3 and 8AM.
 
-Nothing else gets posted to this workspace, so there's no reason to limit the hours.
+Don't narrow this to just cover 3–7AM. An alert arriving in the same minute the schedule opens
+may be dropped, and that failure is deeply confusing — notifications work all day and vanish
+at precisely the hour you care about. Starting at midnight puts hours of margin before the
+first alert.
+
+Nothing else gets posted to this workspace, so there's no reason to limit the hours further.
 
 ### Notify Me on Mobile → **As soon as they're sent**
 
