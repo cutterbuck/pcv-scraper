@@ -26,11 +26,20 @@ Some versions call this *"Let you know about"* → **Everything**. The default i
 messages, mentions & keywords" — the bot doesn't mention you by name, so on the default you
 may get nothing.
 
-### Notification schedule → **allow all hours**, every day
+### Notification schedule → **Every day, 12:00 AM to 12:00 AM**
 
 **This is the one that catches everyone.** Slack sets a schedule by default, often business
 hours on weekdays, and silently drops everything outside it. Alerts arrive around 4AM, right
 in the blocked window.
+
+Tap **Allow notifications**, choose **Every day**, then set **Start** and **End** both to
+**12:00 AM**. Midnight-to-midnight is how Slack expresses "all hours" — there's no explicit
+always-on option.
+
+Don't just widen the window to cover 3–7AM. An alert arriving in the same minute the schedule
+opens can be dropped, which is a genuinely confusing failure: notifications work all day and
+silently vanish at exactly the hour you care about. Set it to all hours and there's no
+boundary to land on.
 
 Nothing else gets posted to this workspace, so there's no reason to limit the hours.
 
@@ -94,6 +103,7 @@ the channel normally either way. Watching one arrive is the only way to know.
 | --- | --- |
 | Message is in the channel, no notification | Notification schedule |
 | Works during the day, never overnight | Notification schedule, or Sleep Focus missing Slack |
+| Works at every hour except the one the schedule starts | Schedule boundary — set it to all hours |
 | Works on laptop, never on phone | Notify Me on Mobile |
 | Notification arrives but hides the text | Show Previews not set to Always |
 | Notification arrives hours late | Scheduled Summary has Slack switched on |
