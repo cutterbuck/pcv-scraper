@@ -50,7 +50,7 @@ class Config:
             # muted channel so operational chatter cannot desensitise you to the alert
             # that matters. Falls back to the main channel when unset.
             slack_ops_webhook_url=os.environ.get("SLACK_OPS_WEBHOOK_URL") or webhook,
-            rent_threshold=_int_env("RENT_THRESHOLD", 9000),
+            rent_threshold=_int_env("RENT_THRESHOLD", 7000),
             bedrooms=_int_env("BEDROOMS", 2),
             bathrooms=_int_env("BATHROOMS", 2),
             property_name=os.environ.get("PROPERTY_NAME", "Peter Cooper Village"),

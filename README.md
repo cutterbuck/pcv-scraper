@@ -79,6 +79,11 @@ doesn't mention anyone by name.
 anyone joining `#pcv-alerts`. Send it to every new member — none of it is obvious, and
 every failure mode looks identical from the sending side.
 
+**[docs/notification-debugging-notes.md](docs/notification-debugging-notes.md)** records
+what was actually wrong here and in what order to check if it breaks again. Start there
+rather than suspecting the scraper: it ran for two weeks without a single error while no
+notifications were arriving at all.
+
 The setting that catches everyone is Slack's per-workspace **notification schedule**, which
 defaults to business hours and silently drops 4AM alerts.
 
@@ -99,7 +104,7 @@ All configuration is environment variables; see `.env.example` for the full list
 | --- | --- | --- |
 | `SLACK_WEBHOOK_URL` | *(required)* | Webhook for apartment alerts (shared channel) |
 | `SLACK_OPS_WEBHOOK_URL` | main webhook | Webhook for heartbeat/failures (private channel) |
-| `RENT_THRESHOLD` | `9000` | Alert when monthly rent is below this |
+| `RENT_THRESHOLD` | `7000` | Alert when monthly rent is below this |
 | `BEDROOMS` / `BATHROOMS` | `2` / `2` | Search criteria |
 | `PROPERTY_NAME` | `Peter Cooper Village` | Search criteria |
 | `TIMEZONE` | `America/New_York` | Timezone for all schedules |

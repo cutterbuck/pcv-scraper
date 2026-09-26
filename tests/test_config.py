@@ -47,17 +47,17 @@ def test_empty_ops_webhook_falls_back(monkeypatch):
     assert Config.from_env().slack_ops_webhook_url == "https://hooks.slack.test/main"
 
 
-def test_threshold_defaults_to_9000(monkeypatch):
+def test_threshold_defaults_to_7000(monkeypatch):
     monkeypatch.setenv("SLACK_WEBHOOK_URL", "https://hooks.slack.test/main")
 
-    assert Config.from_env().rent_threshold == 9000
+    assert Config.from_env().rent_threshold == 7000
 
 
 def test_threshold_is_read_from_env(monkeypatch):
     monkeypatch.setenv("SLACK_WEBHOOK_URL", "https://hooks.slack.test/main")
-    monkeypatch.setenv("RENT_THRESHOLD", "7000")
+    monkeypatch.setenv("RENT_THRESHOLD", "9000")
 
-    assert Config.from_env().rent_threshold == 7000
+    assert Config.from_env().rent_threshold == 9000
 
 
 def test_non_numeric_threshold_is_a_config_error(monkeypatch):

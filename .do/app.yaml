@@ -33,10 +33,11 @@ workers:
       - key: SLACK_OPS_WEBHOOK_URL
         scope: RUN_TIME
         type: SECRET
-      # Set high while testing so alerts actually fire; drop to ~7000 for real use.
+      # Below-market for a PCV 2BR/2BA. Raise temporarily if you need an alert to fire
+      # on demand for testing, then put it back.
       - key: RENT_THRESHOLD
         scope: RUN_TIME
-        value: "9000"
+        value: "7000"
       - key: TIMEZONE
         scope: RUN_TIME
         value: America/New_York
